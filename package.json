@@ -1,0 +1,29 @@
+{
+  "name": "broadcast-server",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Pulso: chat en tiempo real con cuentas, invitados y administración",
+  "private": true,
+  "engines": { "node": ">=22.16.0" },
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "npm run build && node --test tests/*.test.mjs",
+    "start": "node dist/index.js",
+    "build": "tsc",
+    "dev": "npm run build && node --watch dist/index.js start"
+  },
+  "bin": {
+    "broadcast-server": "./dist/index.js",
+    "pulso": "./dist/index.js"
+  },
+  "author": "ruben",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "@types/ws": "^8.18.2",
+    "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "ws": "^8.22.0"
+  }
+}
