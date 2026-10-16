@@ -2,6 +2,8 @@
 
 **Conversaciones que conectan.** Chat en tiempo real construido sobre el Broadcast Server original, con Node.js, TypeScript, WebSocket y una interfaz sin frameworks.
 
+**Demo en línea:** https://rubenibaceta25.alwaysdata.net
+
 **Código:** https://github.com/RubenIbaceta/pulso-chat-tiempo-real · **Publicación gratuita:** [guía para alwaysdata](PUBLICAR.md).
 
 ## Qué incluye
@@ -120,7 +122,7 @@ Pon HTTPS delante de Node y permite las actualizaciones de WebSocket. `PUBLIC_OR
 
 El punto de salud es `GET /api/health`. Monta el volumen en `/app/data`, crea el administrador con variables del proveedor y luego retira sus credenciales de configuración. Para una copia sencilla y coherente, detén la aplicación antes de copiar el directorio `data`; SQLite usa archivos WAL mientras está en ejecución.
 
-Esta entrega prepara el despliegue, pero no lo publica ni crea cuentas en un proveedor. Antes de compartir la URL, comprueba HTTPS/WSS, registro, invitado, permisos administrativos y persistencia después de un reinicio del alojamiento. Una ampliación a varias instancias necesitará una base y un canal de difusión compartidos.
+La demo está publicada en alwaysdata con HTTPS y almacenamiento persistente. Se comprobó el acceso como invitado, la difusión entre dos pestañas y la conservación del historial tras reiniciar el sitio. Una ampliación a varias instancias necesitará una base y un canal de difusión compartidos.
 
 ## Referencias
 

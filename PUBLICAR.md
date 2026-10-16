@@ -2,6 +2,8 @@
 
 El repositorio está en https://github.com/RubenIbaceta/pulso-chat-tiempo-real.
 
+La demo está publicada en https://rubenibaceta25.alwaysdata.net. Las instrucciones siguientes permiten reproducir la instalación en otra cuenta.
+
 alwaysdata dispone de un plan **Free para uso personal**, con almacenamiento persistente, Node.js y WebSocket. Así podemos mantener SQLite sin contratar un disco de Render ni migrar la base. Revisa los límites vigentes al crear la cuenta: https://www.alwaysdata.com/en/offers/.
 
 ## 1. Crear o conectar tu cuenta
