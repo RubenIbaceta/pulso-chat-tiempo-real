@@ -2,9 +2,25 @@
 
 **Conversaciones que conectan.** Chat en tiempo real construido sobre el Broadcast Server original, con Node.js, TypeScript, WebSocket y una interfaz sin frameworks.
 
-**Demo en línea:** https://rubenibaceta25.alwaysdata.net
+**[Probar Pulso](https://rubenibaceta25.alwaysdata.net)** · **[Ver el código](https://github.com/RubenIbaceta/pulso-chat-tiempo-real)**
 
-**Código:** https://github.com/RubenIbaceta/pulso-chat-tiempo-real · **Publicación gratuita:** [guía para alwaysdata](PUBLICAR.md).
+Proyecto de aprendizaje y portafolio que nació como un servidor de difusión desde la terminal y evolucionó a una aplicación web con cuentas, historial y administración.
+
+## Probar la demo
+
+1. Abre [Pulso](https://rubenibaceta25.alwaysdata.net).
+2. Escribe un nombre y selecciona **Probar como invitado**, o crea una cuenta.
+3. Envía un mensaje. Las personas conectadas a la sala lo reciben en tiempo real.
+
+Con una cuenta puedes personalizar tu perfil y editar o eliminar tus mensajes. La vista **Administración** está reservada al administrador; registrarse no concede ese permiso. La sala es pública y compartida, así que evita enviar información privada.
+
+## Tecnologías
+
+- **Servidor:** Node.js y TypeScript, con HTTP y WebSocket mediante `ws`.
+- **Interfaz:** HTML, CSS y JavaScript, sin frameworks.
+- **Persistencia:** SQLite mediante `node:sqlite`.
+- **Autenticación:** contraseñas protegidas con scrypt y sesiones en cookies HttpOnly.
+- **Publicación:** alwaysdata para la aplicación y la base de datos; GitHub para el código.
 
 ## Qué incluye
 
@@ -20,10 +36,12 @@
 
 ## Ejecutar en tu equipo
 
-Requiere **Node.js 22.16 o superior**. En Node 22, `node:sqlite` puede mostrar un aviso de función experimental; no impide su ejecución.
+Requiere **Node.js 22.16 o superior**. El proyecto fija Node.js 24 en `.node-version` y lo utiliza en el alojamiento y la integración continua. En Node 22, `node:sqlite` puede mostrar un aviso de función experimental; no impide su ejecución.
 
 ```powershell
-npm install
+git clone https://github.com/RubenIbaceta/pulso-chat-tiempo-real.git
+cd pulso-chat-tiempo-real
+npm ci
 npm run build
 npm start
 ```
@@ -73,6 +91,8 @@ pulso connect 9090 "Mi nombre"
 
 También se conserva `broadcast-server start` y `broadcast-server connect`. El cliente de terminal crea una sesión de invitado y comparte sus límites. Escribe `/salir` o pulsa Ctrl + C para terminar.
 
+Estos comandos conectan con el servidor de tu equipo (`localhost`). Para probar la demo publicada, utiliza el navegador.
+
 ## Estructura
 
 | Archivo | Responsabilidad |
@@ -85,6 +105,8 @@ También se conserva `broadcast-server start` y `broadcast-server connect`. El c
 | `cliente-terminal.ts` | Cliente de terminal |
 | `web/` | Pantallas, estilos y cliente del navegador |
 | `tests/` | Pruebas de integración y permisos |
+| `PUBLICAR.md` | Instalación, configuración y actualizaciones en alwaysdata |
+| `.github/workflows/ci.yml` | Compilación y pruebas automáticas en GitHub Actions |
 
 El flujo es: navegador/terminal → sesión → WebSocket autenticado → validación → SQLite → difusión a todos. Las ediciones se sincronizan por el mismo canal. Los permisos se comprueban en el servidor, no solo en los botones.
 
@@ -99,13 +121,27 @@ Después de cambiar TypeScript, compila y reinicia el servidor. Para HTML/CSS/JS
 
 Las pruebas usan una base temporal y verifican autenticación, permisos, difusión, edición, moderación, sesiones e historial tras reiniciar. No usan ni borran la base de tu aplicación.
 
+GitHub Actions ejecuta la compilación y las pruebas en cada envío de cambios y solicitud de incorporación.
+
 ## Datos y límites de esta versión
 
 La base se crea en `data/pulso.sqlite`. Cuentas, mensajes y sesiones sobreviven al reinicio. Una sesión de invitado es temporal, pero sus mensajes permanecen en el historial del chat compartido. Las sesiones registradas duran 7 días. Las cuentas no verifican todavía la propiedad del correo y no hay recuperación de contraseña ni subida de fotos; los avatares usan iniciales y colores.
 
 La aplicación usa una sola instancia y un solo chat público para sus participantes. No publiques datos privados en él. La administración muestra métricas del proceso, no métricas de toda la máquina. El registro de actividad conserva las últimas 500 entradas aproximadamente.
 
-## Preparar la publicación
+## Alojamiento y publicación
+
+La demo está alojada en el plan gratuito de **alwaysdata**:
+
+- **Aplicación:** https://rubenibaceta25.alwaysdata.net
+- **Estado del servidor:** https://rubenibaceta25.alwaysdata.net/api/health
+- **Guía de instalación y actualización:** [PUBLICAR.md](PUBLICAR.md).
+
+El mismo servidor ofrece la web, la API y las conexiones WebSocket con HTTPS/WSS. SQLite se guarda en el almacenamiento persistente del alojamiento, fuera de la carpeta del código. GitHub almacena el código fuente; la aplicación se ejecuta en alwaysdata.
+
+Se verificaron el acceso como invitado, los mensajes entre dos pestañas, el panel de administración y la conservación de la cuenta y el historial después de reiniciar el sitio. Las credenciales usadas para crear el administrador se retiraron de la configuración tras comprobar su acceso.
+
+### Desplegar tu propia instancia
 
 Se incluye `Dockerfile`. El alojamiento necesita un proceso Node persistente, soporte para WebSocket y un volumen persistente para SQLite. No sirve un alojamiento que solo publique HTML estático ni un disco que se borre al reiniciar.
 
@@ -122,7 +158,20 @@ Pon HTTPS delante de Node y permite las actualizaciones de WebSocket. `PUBLIC_OR
 
 El punto de salud es `GET /api/health`. Monta el volumen en `/app/data`, crea el administrador con variables del proveedor y luego retira sus credenciales de configuración. Para una copia sencilla y coherente, detén la aplicación antes de copiar el directorio `data`; SQLite usa archivos WAL mientras está en ejecución.
 
-La demo está publicada en alwaysdata con HTTPS y almacenamiento persistente. Se comprobó el acceso como invitado, la difusión entre dos pestañas y la conservación del historial tras reiniciar el sitio. Una ampliación a varias instancias necesitará una base y un canal de difusión compartidos.
+Una ampliación a varias instancias necesitará una base y un canal de difusión compartidos.
+
+## Posibles mejoras
+
+- Verificación de correo y recuperación de contraseña.
+- Subida de imágenes para el avatar.
+- Salas y conversaciones privadas.
+- Automatización del despliegue y gestión de copias de seguridad.
+
+Estas mejoras todavía no están implementadas.
+
+## Autor y licencia
+
+Creado por [Rubén Ibaceta](https://github.com/RubenIbaceta). Distribuido bajo la [licencia ISC](LICENSE).
 
 ## Referencias
 
