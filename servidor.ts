@@ -187,7 +187,7 @@ export async function iniciarServidor(puerto = 8080, options: Opciones = {}) {
     for (const [socket, conn] of connections) { if (!conn.alive || !store.authenticate(conn.token)) { socket.terminate(); continue; } conn.alive = false; socket.ping(); }
     store.clean(); limits.limpiar(); notifyAdmins();
   }, 30_000); heartbeat.unref();
-  await new Promise<void>((accept, reject) => { server.once("error", reject); server.listen(puerto, options.host ?? process.env.HOST ?? "0.0.0.0", () => { server.removeListener("error", reject); accept(); }); }).catch(error => { clearInterval(heartbeat); sockets.close(); store.close(); throw error; });
+  await new Promise<void>((accept, reject) => { server.once("error", reject); server.listen(puerto, options.host ?? process.env.HOST ?? process.env.IP ?? "0.0.0.0", () => { server.removeListener("error", reject); accept(); }); }).catch(error => { clearInterval(heartbeat); sockets.close(); store.close(); throw error; });
   actualPort = (server.address() as { port: number }).port; store.activity(`Servidor iniciado en el puerto ${actualPort}`); console.log(`Pulso · http://localhost:${actualPort}`);
   let closing: Promise<void> | undefined;
   const close = (): Promise<void> => closing ??= new Promise<void>(accept => {

@@ -2,6 +2,8 @@
 
 **Conversaciones que conectan.** Chat en tiempo real construido sobre el Broadcast Server original, con Node.js, TypeScript, WebSocket y una interfaz sin frameworks.
 
+**Código:** https://github.com/RubenIbaceta/pulso-chat-tiempo-real · **Publicación gratuita:** [guía para alwaysdata](PUBLICAR.md).
+
 ## Qué incluye
 
 - Registro e inicio de sesión con correo y contraseña.
